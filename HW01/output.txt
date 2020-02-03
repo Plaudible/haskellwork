@@ -1,0 +1,45 @@
+Configuring GHCi with the following packages:
+GHCi, version 8.6.3: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from C:\Users\plaud\AppData\Local\Temp\haskell-stack-ghci\2a3bbd58\ghci-script
+Prelude> :load C:\Users\plaud\Desktop\Haskell\hw01.hs
+[1 of 1] Compiling Main             ( C:\Users\plaud\Desktop\Haskell\hw01.hs, interpreted )
+Ok, one module loaded.
+*Main> testRun
+convert prop             : +++ OK, passed 100 tests.
+vowel prop               : +++ OK, passed 100 tests.
+disemvowel prop          : +++ OK, passed 100 tests.
+smash prop               : +++ OK, passed 100 tests.
+shift prop 1             : +++ OK, passed 100 tests.
+shift prop 2             : +++ OK, passed 100 tests.
+shift prop 3             : +++ OK, passed 100 tests.
+capitalized prop         : +++ OK, passed 100 tests.
+title prop               : +++ OK, passed 100 tests; 19 discarded.
+*Main> distance (1,7) ((-5),9)
+6.324555320336759
+*Main> rotate90 (300,(-50))
+(50.0,300.0)
+*Main> isVowel 'a'
+True
+*Main> isVowel 'b'
+False
+*Main> disEmvowel "Spaghetti"
+"Spghtt"
+*Main> disEmvowel "Supercalifragilisticexpialidocious"
+"Sprclfrglstcxpldcs"
+*Main> smash "Fee, Fie, Foe, and Fum!"
+"feefiefoeandfum"
+*Main> smash "Why am I doing this so late at night?"
+"whyamidoingthissolateatnight"
+*Main> shift 1 "abcxyz"
+"bcdyza"
+*Main> shift 0 "abcxyz"
+"abcxyz"
+*Main> shift 25 "abcxyz"
+"zabwxy"
+*Main> shift 30 "I have a quiz at nine thirty and its two in the morning"
+"mlezieuymdexrmrixlmvxcerhmxwxasmrxliqsvrmrk"
+*Main> capitalized "sYraCusE"
+"Syracuse"
+*Main> title ["This","is","gonna","be","a","rough","time"]
+["This","is","Gonna","be","a","Rough","Time"]
+*Main>

@@ -1,0 +1,60 @@
+C:\Users\plaud>stack ghci
+
+Note: No local targets specified, so a plain ghci will be started with no package hiding or package
+      options.
+
+      If you want to use package hiding and options, then you can try one of the following:
+
+      * If you want to start a different project configuration
+        than C:\sr\global-project\stack.yaml, then you can use stack init to create a new stack.yaml
+        for the packages in the current directory.
+
+      * If you want to use the project configuration
+        at C:\sr\global-project\stack.yaml, then you can add to its 'packages' field.
+
+Configuring GHCi with the following packages:
+GHCi, version 8.6.3: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from C:\Users\plaud\AppData\Local\Temp\haskell-stack-ghci\2a3bbd58\ghci-script
+Prelude> :load C:\Users\plaud\Desktop\Haskell\HW02\hw02.hs
+[1 of 1] Compiling Main             ( C:\Users\plaud\Desktop\Haskell\HW02\hw02.hs, interpreted )
+Ok, one module loaded.
+*Main> bmaxDepth t1
+2
+*Main> bmaxDepth t3
+2
+*Main> bmaxDepth t4
+3
+*Main> mmaxDepth t2
+2
+*Main> mmaxDepth t5
+3
+*Main> quickCheck bleaves_prop
++++ OK, passed 100 tests.
+*Main> quickCheck mleaves_prop
++++ OK, passed 100 tests.
+*Main> blevel 0 t1
+""
+*Main> blevel 1 t1
+"x"
+*Main> blevel 2 t1
+"tw"
+*Main> blevel 3 t1
+"amq"
+*Main> blevel 4 t1
+""
+*Main> mlevel 0 t2
+"u"
+*Main> mlevel 1 t2
+"cqny"
+*Main> mlevel 2 t2
+"mgjz"
+*Main> mlevel 3 t2
+""
+*Main> quickCheck postorder_prop
++++ OK, passed 100 tests.
+*Main> quickCheck recon_prop
++++ OK, passed 100 tests.
+*Main> makeTreesTest
+True
+*Main> postorder t1
+"atmqwx"

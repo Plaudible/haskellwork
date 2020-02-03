@@ -1,0 +1,223 @@
+*Main> :r
+[4 of 4] Compiling Main             ( LFPbs.hs, interpreted )
+Ok, four modules loaded.
+
+QUESTION 2
+
+*Main> runFvAll
+Cases: 5  Tried: 5  Errors: 0  Failures: 0
+Counts {cases = 5, tried = 5, errors = 0, failures = 0}
+*Main>
+*Main> fvs "let y = (let x = (+ x 7) in (+ x z)) in (let x = y in (+ x y))"
+["z"] --> Z is the only free variable, thus it's displaying this.
+*Main> fvs "let x = (+ x y) in (let y = (* x y) in (let x = (* x y) in (- x y)))"
+["y"] --> Y is the only free variable, thus it's displaying this.
+
+QUESTION 3
+
+*Main> runSubAll
+Computing: x[(y w)/x]
+result =   (y w)
+
+Computing: z[(y w)/x]
+result =   z
+
+Computing: (z x)[(y w)/x]
+result =   (z (y w))
+
+Computing: (fn x => z)[(y w)/x]
+result =   (fn x => z)
+
+Computing: (fn t => z)[(y w)/x]
+result =   (fn a => z)
+
+Computing: (fn t => x)[(y w)/x]
+result =   (fn a => (y w))
+
+Computing: (fn y => (x y))[(y w)/x]
+result =   (fn a => (y w a))
+
+Computing: (y (y z))[(z w)/x]
+result =   (y (y z))
+
+Computing: (fn u => fn w => (w x u))[(u w)/x]
+result =   (fn a => (fn c => (c (u w) a)))
+
+Computing: (fn a => fn b => (a (x b)))[(fn b => (a b))/x]
+result =   (fn b => (fn d => (b ((fn b => (a b)) d))))
+
+Computing: let x = (+ y x) in (+ y x)[3/x]
+result =   let x = (+ y 3) in (+ y x)
+
+Computing: (x 2 3)[fn y => fn z => (+ y z)/x]
+result =   ((fn y => (fn z => (+ y z))) 2 3)
+
+Computing: (x (+ 1 (let x = 4 in x)) (* 2 (let y = 3 in (x y z))))[fn y => fn z => (+ y z)/x]
+result =   ((fn y => (fn z => (+ y z))) (+ 1 let x = 4 in x) (* 2 let a = 3 in ((fn y => (fn z => (+ y z))) a z)))
+
+*Main> runSubst "(x 2 3)" "x" "fn y => fn z => (+ y x)"
+Computing: (x 2 3)[fn y => fn z => (+ y x)/x]
+result =   ((fn y => (fn z => (+ y x))) 2 3) -> This is like this because it reduces the function a little.
+
+*Main> runSubst "(fn u => fn w => (w x u))" "x" "(w u)"
+Computing: (fn u => fn w => (w x u))[(w u)/x]
+result =   (fn a => (fn c => (c (w u) a))) -> This is like this because it reduces the function a little.
+
+QUESTION 4
+
+*Main> runEvalAll
+Evaluating:
+    { X1 := 1;  while (> val(X0) 0) do {  X1 := (* val(X1) val(X0)); X0 := (- val(X0) 1) }}
+Result:
+    skip
+    Locs(!=0): X[1]=24
+
+Evaluating:
+    let x = 2 in (+ 10 x)
+Result:
+    12
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let x = 10 in let y = (+ x 1) in let x = (- y 5)  in let y = (+ y 1) in (+ (* 100 x) y)
+Result:
+    612
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    (fn x => (+ x 2))
+Result:
+    (fn x => (+ x 2))
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    ((fn x => (+ x 2)) 19)
+Result:
+    21
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c = fn x => fn y => (+ x y) in (c 2 3)
+Result:
+    5
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c = fn x => fn p => (p (* x x))  in (let inc = fn x => (+ 1 x) in (c 4 inc))
+Result:
+    17
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c =  fn x => { X1 := (* val(X1) val(X0)); X0 := (- val(X0) x) } in  { X1 := 1;  while (> val(X0) 0) do (c 1) }
+Result:
+    skip
+    Locs(!=0): X[1]=24
+
+Evaluating:
+    let c =  fn x => { X1 := (* val(X1) val(X0)); X0 := (- val(X0) x) } in  { X1 := 1;  while (> val(X0) 0) do (c 2) }
+Result:
+    skip
+    Locs(!=0): X[1]=8
+
+Evaluating:
+    let c = { X1 := (* val(X1) val(X0)) } in  { X1 := 1;  while (> val(X0) 0) do { c; X0 := (- val(X0) 1) }}
+Result:
+    skip
+    Locs(!=0): X[1]=24
+
+*Main> runEval "let y = 4 in (+ 20 y)"
+Evaluating:
+    let y = 4 in (+ 20 y)
+Result:
+    24
+    Locs(!=0): X[0]=4 --> This is correct because it adds 20 to y and makes it 24.
+
+*Main> runEval "((fn z => (+ z 3)) 17)"
+Evaluating:
+    ((fn z => (+ z 3)) 17)
+Result:
+    20
+    Locs(!=0): X[0]=4 --> This is correct because it adds 17 to z making it 20.
+
+QUESTION 5
+
+*Main> :r
+[4 of 4] Compiling Main             ( LFPbs.hs, interpreted )
+Ok, four modules loaded.
+*Main> runEvalAll
+Evaluating:
+    { X1 := 1;  while (> val(X0) 0) do {  X1 := (* val(X1) val(X0)); X0 := (- val(X0) 1) }}
+Result:
+    skip
+    Locs(!=0): X[1]=24
+
+Evaluating:
+    let x = 2 in (+ 10 x)
+Result:
+    12
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let x = 10 in let y = (+ x 1) in let x = (- y 5)  in let y = (+ y 1) in (+ (* 100 x) y)
+Result:
+    612
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    (fn x => (+ x 2))
+Result:
+    (fn x => (+ x 2))
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    ((fn x => (+ x 2)) 19)
+Result:
+    21
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c = fn x => fn y => (+ x y) in (c 2 3)
+Result:
+    5
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c = fn x => fn p => (p (* x x))  in (let inc = fn x => (+ 1 x) in (c 4 inc))
+Result:
+    17
+    Locs(!=0): X[0]=4
+
+Evaluating:
+    let c =  fn x => { X1 := (* val(X1) val(X0)); X0 := (- val(X0) x) } in  { X1 := 1;  while (> val(X0) 0) do (c 1) }
+Result:
+    skip
+    Locs(!=0): X[1]=24
+
+Evaluating:
+    let c =  fn x => { X1 := (* val(X1) val(X0)); X0 := (- val(X0) x) } in  { X1 := 1;  while (> val(X0) 0) do (c 2) }
+Result:
+    skip
+    Locs(!=0): X[1]=8
+
+Evaluating:
+    let c = { X1 := (* val(X1) val(X0)) } in  { X1 := 1;  while (> val(X0) 0) do { c; X0 := (- val(X0) 1) }}
+Result:
+    skip
+    Locs(!=0): X[1]=1
+
+*Main> runEval "let z = 1 in (+ 5 z)"
+Evaluating:
+    let z = 1 in (+ 5 z)
+Result:
+    6
+    Locs(!=0): X[0]=4 - It adds 5 to 1, and returns 6. Stores in index 0.
+
+*Main> runEval "((fn y => (+ y 2)) 22)"
+Evaluating:
+    ((fn y => (+ y 2)) 22)
+Result:
+    24
+    Locs(!=0): X[0]=4 - It adds 22 to 2, and returns 24. Stores in index 0.
+
+*Main>
